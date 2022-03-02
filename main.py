@@ -28,12 +28,13 @@ class card:
 card2 = card("Basic Attack")
 card2.damage = 5
 card2.cardImage = placeholder
-
-DISPLAYSURF.blit(background, (0, 0))
-while True:
-    for event in pygame.event.get():
-        if event.type == QUIT or (event.type == KEYUP
-                                  and event.key == K_ESCAPE):
+def main():
+  DISPLAYSURF.blit(background, (0, 0))
+  while True:
+      for event in pygame.event.get():
+          if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
             pygame.quit()
             sys.exit()
-    pygame.display.update()
+  pygame.display.update()
+
+main()
