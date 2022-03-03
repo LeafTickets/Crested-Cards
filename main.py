@@ -56,14 +56,12 @@ discard = []
 
 def drawCard(amount):
     for nums in range(0, amount):
-        chosenCard = deck.pop(randint(0, len(deck)))
+        chosenCard = deck.pop(randint(0, len(deck)-1))
         hand.append(chosenCard)
         discard.append(chosenCard)
 
 DISPLAYSURF.blit(background, (0, 0))
-DISPLAYSURF.blit(card3.cardImage, (50, 50))
 while start:
-    DISPLAYSURF.blit(background, (0, 0))
     for event in pygame.event.get():
         if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
             pygame.quit()
@@ -73,5 +71,10 @@ while start:
     if turn == 0:
         turn = 1
         drawCard(2)
-        print(hand)
+        cardSelection = 0
+        cardx = 50
+        for cards in range(0, len(hand)):
+            DISPLAYSURF.blit(hand[cardSelection].cardImage, (cardx, 50))
+            cardSelection = cardSelection + 1
+            cardx = cardx + 50
     pygame.display.update()
