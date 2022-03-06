@@ -54,8 +54,8 @@ def cardGenerator(name, damage, type, gearCost):
 card3 = cardGenerator("card", 6, "Attack", -8)
 card4 = cardGenerator("card", 3, "Attack", -8)
 card5 = cardGenerator("card", 3, "Attack", -8)
-card6 = cardGenerator("card", 0, "Gear", 4)
-card7 = cardGenerator("card", 50, "Gear", -5)
+card6 = cardGenerator("card1", 0, "Gear", 4)
+card7 = cardGenerator("card1", 50, "Gear", -5)
 card8 = cardGenerator("card", 3, "Attack", -8)
 card9 = cardGenerator("card", 3, "Attack", -8)
 card10 = cardGenerator("card", 3, "Attack", -8)
@@ -140,14 +140,30 @@ while start:
             elif event.key == K_ESCAPE:
                 pygame.quit()
                 sys.exit()
-            elif event.key == K_s:
+            elif event.key == K_1:
                 enemyHealth, currentGears = playCard(hand[0], currentGears, enemyHealth)
-                displayUpdate()
-                enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
-                pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
-                cardPlace()
-                pygame.display.update()
-                print(enemyHealth, currentGears)
+            elif event.key == K_2:
+                enemyHealth, currentGears = playCard(hand[1], currentGears, enemyHealth)
+            elif event.key == K_3:
+                enemyHealth, currentGears = playCard(hand[2], currentGears, enemyHealth)
+            elif event.key == K_4:
+                enemyHealth, currentGears = playCard(hand[3], currentGears, enemyHealth)
+            elif event.key == K_5:
+                enemyHealth, currentGears = playCard(hand[4], currentGears, enemyHealth)
+            elif event.key == K_6:
+                enemyHealth, currentGears = playCard(hand[5], currentGears, enemyHealth)
+            elif event.key == K_7:
+                enemyHealth, currentGears = playCard(hand[6], currentGears, enemyHealth)
+            elif event.key == K_8:
+                enemyHealth, currentGears = playCard(hand[7], currentGears, enemyHealth)
+            elif event.key == K_9:
+                enemyHealth, currentGears = playCard(hand[8], currentGears, enemyHealth)
+            displayUpdate()
+            enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
+            pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
+            cardPlace()
+            pygame.display.update()
+            print(enemyHealth, currentGears)
     elif turn == 1:
         drawn = False
         pygame.event.clear()
