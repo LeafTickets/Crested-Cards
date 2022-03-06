@@ -77,31 +77,29 @@ def cardPlace():
         cardx = cardx + 80
 
 
-
 deck = [card2, card3, card4, card5, card6]
 discard = []
 DISPLAYSURF.blit(background, (0, 0))
+pygame.display.update()
 while start:
     if turn == 0:
+        drawn = False
         pygame.event.clear()
         event = pygame.event.wait()
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-        elif event.type == KEYDOWN:
+        if event.type == KEYUP:
             if event.key == K_a:
-                drawCard(2)
-                cardPlace()
-                pygame.display.update()
-                pygame.event.clear()
-                if event.type == QUIT:
-                    pygame.quit()
-                    sys.exit()
-                elif event.type == KEYDOWN:
-                    if event.key == K_a:
-                        print("next turn")
-                        turn = 1
-            if event.key == K_ESCAPE:
+                if not drawn:
+                    drawCard(2)
+                    cardPlace()
+                    drawn = True
+                    pygame.display.update()
+            elif event.type == KEYUP and event.key == K_e:
+                 print("CPU's turn")
+                 turn = 1
+            elif event.key == K_ESCAPE:
                 pygame.quit()
                 sys.exit()
     elif turn == 1:
@@ -112,7 +110,7 @@ while start:
             sys.exit()
         elif event.type == KEYDOWN:
             if event.key == K_a:
-                print("next turn")
+                print("Players turn")
                 turn = 0
             if event.key == K_ESCAPE:
                 pygame.quit()
