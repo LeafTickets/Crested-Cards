@@ -55,10 +55,16 @@ card3 = cardGenerator("card", 6, "Attack", -8)
 card4 = cardGenerator("card", 3, "Attack", -8)
 card5 = cardGenerator("card", 3, "Attack", -8)
 card6 = cardGenerator("card", 0, "Gear", 4)
+card7 = cardGenerator("card", 50, "Gear", -5)
+card8 = cardGenerator("card", 3, "Attack", -8)
+card9 = cardGenerator("card", 3, "Attack", -8)
+card10 = cardGenerator("card", 3, "Attack", -8)
 
 
 def drawCard(amount):
     for nums in range(0, amount):
+        if len(hand) == 9:
+            return
         if deck == []:
             if discard == []:
                 return
@@ -86,24 +92,33 @@ def playCard(chosenCard, gears, health):  # for target, the player is 1 while th
     print(discard)
     value1 = health
     value2 = gears
-    if chosenCard.cardType == "Attack":
+    if chosenCard.damage > 0:
         value1 = health - chosenCard.damage
     if chosenCard.gearCost > 0:
         value2 = gears + chosenCard.gearCost
     if chosenCard.gearCost < 0:
         if abs(chosenCard.gearCost) > gears:
-            return
+            return health, gears
         elif abs(chosenCard.gearCost) <= gears:
             value2 = gears + chosenCard.gearCost
     return value1, value2
 
+def displayUpdate():
+    if hand == []:
+        DISPLAYSURF.blit(background, (0, 0))
+        DISPLAYSURF.blit(discard[-1].cardImage, (1100, 500))
+    else:
+        DISPLAYSURF.blit(background, (0, 0))
+        DISPLAYSURF.blit(hand[0].cardImage, (1100, 500))
 
 enemyHealth = 100
+enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
 playerHealth = 100
 currentGears = 0
-deck = [card2, card3, card4, card5, card6]
+deck = [card2, card3, card4, card5, card6, card7, card8, card9, card10]
 discard = []
 DISPLAYSURF.blit(background, (0, 0))
+pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
 pygame.display.update()
 while start:
     if turn == 0:
@@ -127,8 +142,9 @@ while start:
                 sys.exit()
             elif event.key == K_s:
                 enemyHealth, currentGears = playCard(hand[0], currentGears, enemyHealth)
-                DISPLAYSURF.blit(background, (0, 0))
-                DISPLAYSURF.blit(hand[0].cardImage, (1100, 500))
+                displayUpdate()
+                enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
+                pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
                 cardPlace()
                 pygame.display.update()
                 print(enemyHealth, currentGears)
@@ -146,5 +162,8 @@ while start:
             if event.key == K_ESCAPE:
                 pygame.quit()
                 sys.exit()
+    if enemyHealth <= 0:
+        pygame.quit()
+        sys.exit()
     else:
         pygame.display.update()
