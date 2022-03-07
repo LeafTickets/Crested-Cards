@@ -22,7 +22,7 @@ hand2 = []
 drawn = False
 
 
-class card:
+class card: #All the cards info is stored here
     def __init__(self, nam):
         self.name = nam
         print(self.name, 'constructed')
@@ -31,7 +31,6 @@ class card:
     damage = 0
     gearCost = 0
     cardType = "Placeholder"
-    moving = False
 
 
 
@@ -40,7 +39,7 @@ card2.damage = 5
 card2.cardImage = placeholder
 
 
-def cardGenerator(name, damage, type, gearCost):
+def cardGenerator(name, damage, type, gearCost): #makes a new card
     name = card(name)
     name.damage = damage
     name.cardType = type
