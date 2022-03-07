@@ -110,12 +110,12 @@ def displayUpdate(): #updates the display for all the cards and background
         DISPLAYSURF.blit(background, (0, 0))
         DISPLAYSURF.blit(hand[0].cardImage, (1100, 500))
 
-def getCard(): #gets the card under the mouse(WIP)
+def getCard(): #gets the card under the mouse
   cardChecked = 0
   x = 55
   y = 700
   for cards in range(0, len(hand)):
-    rect = hand[cardChecked].cardImage.get_rect(x, y)
+    rect = hand[cardChecked].cardImage.get_rect(x=x, y=y)
     if rect.collidepoint(pygame.mouse.get_pos()):
       return cardChecked
     cardChecked = cardChecked + 1
