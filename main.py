@@ -111,6 +111,11 @@ def displayUpdate():
         DISPLAYSURF.blit(background, (0, 0))
         DISPLAYSURF.blit(hand[0].cardImage, (1100, 500))
 
+def getCard():
+    return
+
+
+
 enemyHealth = 100
 enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
 playerHealth = 100
@@ -158,6 +163,15 @@ while start:
                 enemyHealth, currentGears = playCard(hand[7], currentGears, enemyHealth)
             elif event.key == K_9:
                 enemyHealth, currentGears = playCard(hand[8], currentGears, enemyHealth)
+            displayUpdate()
+            enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
+            pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
+            cardPlace()
+            pygame.display.update()
+            print(enemyHealth, currentGears)
+        elif event.type == MOUSEBUTTONUP:
+            print(getCard())
+            enemyHealth, currentGears = playCard(hand[getCard()], currentGears, enemyHealth)
             displayUpdate()
             enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
             pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
