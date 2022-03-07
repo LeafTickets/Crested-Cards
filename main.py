@@ -112,11 +112,14 @@ def displayUpdate(): #updates the display for all the cards and background
 
 def getCard(): #gets the card under the mouse(WIP)
   cardChecked = 0
+  x = 55
+  y = 700
   for cards in range(0, len(hand)):
-    rect = hand[cardChecked].cardImage.get_rect(x=300, y=100)
+    rect = hand[cardChecked].cardImage.get_rect(x, y)
     if rect.collidepoint(pygame.mouse.get_pos()):
       return cardChecked
     cardChecked = cardChecked + 1
+    x = x+80
 
 enemyHealth = 100
 enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
