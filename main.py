@@ -3,7 +3,7 @@ import sys
 from pygame.locals import *
 from random import randint
 
-pygame.init()
+pygame.init() #Starts pygame
 DISPLAYSURF = pygame.display.set_mode((1200, 900))
 pygame.display.set_caption('Game Window')
 purple = pygame.Color(128, 0, 128)
@@ -61,7 +61,7 @@ card9 = cardGenerator("card", 3, "Attack", -8)
 card10 = cardGenerator("card", 3, "Attack", -8)
 
 
-def drawCard(amount):
+def drawCard(amount): #draws a certain amount of cards
     for nums in range(0, amount):
         if len(hand) == 9:
             return
@@ -77,7 +77,7 @@ def drawCard(amount):
         hand.append(chosenCard)
 
 
-def cardPlace():
+def cardPlace(): #Places the cards in the hand on the screen
     cardSelection = 0
     cardx = 55
     for cards in range(0, len(hand)):
@@ -103,7 +103,7 @@ def playCard(chosenCard, gears, health):  # for target, the player is 1 while th
             value2 = gears + chosenCard.gearCost
     return value1, value2
 
-def displayUpdate():
+def displayUpdate(): #updates the display for all the cards and background
     if hand == []:
         DISPLAYSURF.blit(background, (0, 0))
         DISPLAYSURF.blit(discard[-1].cardImage, (1100, 500))
@@ -111,7 +111,7 @@ def displayUpdate():
         DISPLAYSURF.blit(background, (0, 0))
         DISPLAYSURF.blit(hand[0].cardImage, (1100, 500))
 
-def getCard():
+def getCard(): #gets the card under the mouse(WIP)
   cardChecked = 0
   for cards in range(0, len(hand)):
     rect = hand[cardChecked].cardImage.get_rect(x=300, y=100)
@@ -128,8 +128,8 @@ discard = []
 DISPLAYSURF.blit(background, (0, 0))
 pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
 pygame.display.update()
-while start:
-    if turn == 0:
+while start: #Main loop for the game
+    if turn == 0: #Plalyers turn
         pygame.event.clear()
         event = pygame.event.wait()
         if event.type == QUIT:
@@ -181,7 +181,7 @@ while start:
             cardPlace()
             pygame.display.update()
             print(enemyHealth, currentGears)
-    elif turn == 1:
+    elif turn == 1: #CPU's turn
         drawn = False
         pygame.event.clear()
         event = pygame.event.wait()
