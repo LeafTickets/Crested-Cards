@@ -5,7 +5,7 @@ from random import randint
 
 pygame.init() #Starts pygame
 DISPLAYSURF = pygame.display.set_mode((1200, 900))
-pygame.display.set_caption('Game Window')
+pygame.display.set_caption('pythonGame')
 purple = pygame.Color(128, 0, 128)
 black = pygame.Color(0, 0, 0)
 white = pygame.Color(0, 0, 0)
@@ -120,7 +120,7 @@ def getCard(): #gets the card under the mouse(WIP)
       return cardChecked
     cardChecked = cardChecked + 1
     x = x+80
-
+  
 enemyHealth = 100
 enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
 playerHealth = 100
