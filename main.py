@@ -116,7 +116,7 @@ def getCard():
   for cards in range(0, len(hand)):
     rect = hand[cardChecked].cardImage.get_rect(x=300, y=100)
     if rect.collidepoint(pygame.mouse.get_pos()):
-      return hand[cardChecked]
+      return cardChecked
     cardChecked = cardChecked + 1
 
 enemyHealth = 100
