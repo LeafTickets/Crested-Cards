@@ -150,30 +150,6 @@ while start: #Main loop for the game
             elif event.key == K_ESCAPE:
                 pygame.quit()
                 sys.exit()
-            elif event.key == K_1:
-                enemyHealth, currentGears = playCard(hand[0], currentGears, enemyHealth)
-            elif event.key == K_2:
-                enemyHealth, currentGears = playCard(hand[1], currentGears, enemyHealth)
-            elif event.key == K_3:
-                enemyHealth, currentGears = playCard(hand[2], currentGears, enemyHealth)
-            elif event.key == K_4:
-                enemyHealth, currentGears = playCard(hand[3], currentGears, enemyHealth)
-            elif event.key == K_5:
-                enemyHealth, currentGears = playCard(hand[4], currentGears, enemyHealth)
-            elif event.key == K_6:
-                enemyHealth, currentGears = playCard(hand[5], currentGears, enemyHealth)
-            elif event.key == K_7:
-                enemyHealth, currentGears = playCard(hand[6], currentGears, enemyHealth)
-            elif event.key == K_8:
-                enemyHealth, currentGears = playCard(hand[7], currentGears, enemyHealth)
-            elif event.key == K_9:
-                enemyHealth, currentGears = playCard(hand[8], currentGears, enemyHealth)
-            displayUpdate()
-            enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
-            pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
-            cardPlace()
-            pygame.display.update()
-            print(enemyHealth, currentGears)
         elif event.type == MOUSEBUTTONUP:
             print(getCard())
             enemyHealth, currentGears = playCard(hand[getCard()], currentGears, enemyHealth)
