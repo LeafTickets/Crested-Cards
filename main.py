@@ -3,7 +3,7 @@ import sys
 from pygame.locals import *
 from random import randint
 
-pygame.init() #Starts pygame
+pygame.init()  # Starts pygame
 DISPLAYSURF = pygame.display.set_mode((1200, 900))
 pygame.display.set_caption('pythonGame')
 purple = pygame.Color(128, 0, 128)
@@ -22,7 +22,7 @@ hand2 = []
 drawn = False
 
 
-class card: #All the cards info is stored here
+class card:  # All the cards info is stored here
     def __init__(self, nam):
         self.name = nam
         print(self.name, 'constructed')
@@ -34,12 +34,8 @@ class card: #All the cards info is stored here
 
 
 
-card2 = card("Basic Attack")
-card2.damage = 5
-card2.cardImage = placeholder
 
-
-def cardGenerator(name, damage, type, gearCost): #makes a new card
+def cardGenerator(name, damage, type, gearCost):  # makes a new card
     name = card(name)
     name.damage = damage
     name.cardType = type
@@ -60,23 +56,22 @@ card9 = cardGenerator("card", 3, "Attack", -8)
 card10 = cardGenerator("card", 3, "Attack", -8)
 
 
-def drawCard(amount): #draws a certain amount of cards
-    for nums in range(0, amount):
-        if len(hand) == 9:
-            return
-        if deck == []:
-            if discard == []:
+def drawCard(amount):  # draws a certain amount of cards
+        for nums in range(0, amount):
+            if len(hand) == 9:
                 return
-            cardPop = 0
-            for cards in range(0, len(discard)):
-                poppedCard = discard.pop(cardPop)
-                deck.append(poppedCard)
-        print(deck)
-        chosenCard = deck.pop(randint(0, len(deck) - 1))
-        hand.append(chosenCard)
+            if deck == []:
+                if discard == []:
+                    return
+                cardPop = 0
+                for cards in range(0, len(discard)):
+                    poppedCard = discard.pop(cardPop)
+                    deck.append(poppedCard)
+            print(deck)
+            chosenCard = deck.pop(randint(0, len(deck) - 1))
+            hand.append(chosenCard)
 
-
-def cardPlace(): #Places the cards in the hand on the screen
+def cardPlace():  # Places the cards in the hand on the screen
     cardSelection = 0
     cardx = 55
     for cards in range(0, len(hand)):
@@ -85,10 +80,13 @@ def cardPlace(): #Places the cards in the hand on the screen
         cardx = cardx + 80
 
 
-def playCard(chosenCard, gears, health):  # for target, the player is 1 while the enemy is 0
-    discardedCard = hand.pop(hand.index(chosenCard))
-    discard.append(discardedCard)
-    print(discard)
+def playCard(chosenCard, gears, health, target):  # for target, the player is 0 while the enemy is 1
+    if target == 1:
+        discardedCard = hand.pop(hand.index(chosenCard))
+        discard.append(discardedCard)
+    if target == 0:
+        discardedCard = hand2.pop(hand.index(chosenCard))
+        ediscard.append(discardedCard)
     value1 = health
     value2 = gears
     if chosenCard.damage > 0:
@@ -102,7 +100,8 @@ def playCard(chosenCard, gears, health):  # for target, the player is 1 while th
             value2 = gears + chosenCard.gearCost
     return value1, value2
 
-def displayUpdate(): #updates the display for all the cards and background
+
+def displayUpdate():  # updates the display for all the cards and background
     if hand == []:
         DISPLAYSURF.blit(background, (0, 0))
         DISPLAYSURF.blit(discard[-1].cardImage, (1100, 500))
@@ -110,41 +109,44 @@ def displayUpdate(): #updates the display for all the cards and background
         DISPLAYSURF.blit(background, (0, 0))
         DISPLAYSURF.blit(hand[0].cardImage, (1100, 500))
 
-def getCard(): #gets the card under the mouse
-  cardChecked = 0
-  x = 55
-  y = 700
-  for cards in range(0, len(hand)):
-    rect = hand[cardChecked].cardImage.get_rect(x=x, y=y)
-    if rect.collidepoint(pygame.mouse.get_pos()):
-      return cardChecked
-    cardChecked = cardChecked + 1
-    x = x+80
-  
+
+def getCard():  # gets the card under the mouse
+    cardChecked = 0
+    x = 55
+    y = 700
+    for cards in range(0, len(hand)):
+        rect = hand[cardChecked].cardImage.get_rect(x=x, y=y)
+        if rect.collidepoint(pygame.mouse.get_pos()):
+            return cardChecked
+        cardChecked = cardChecked + 1
+        x = x + 80
+
+
 enemyHealth = 100
 enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
 playerHealth = 100
 currentGears = 0
-deck = [card2, card3, card4, card5, card6, card7, card8, card9, card10]
+deck = [card3, card4, card5, card6, card7, card8, card9, card10]
 discard = []
+edeck = [card3, card4, card5, card6, card7, card8, card9, card10]
+ediscard = []
 DISPLAYSURF.blit(background, (0, 0))
 pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
 pygame.display.update()
-while start: #Main loop for the game
-    if turn == 0: #Plalyers turn
+while start:  # Main loop for the game
+    if turn == 0:  # Players turn
+        if not drawn:
+            drawCard(3)
+            cardPlace()
+            drawn = True
+            pygame.display.update()
         pygame.event.clear()
         event = pygame.event.wait()
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
         if event.type == KEYUP:
-            if event.key == K_a:
-                if not drawn:
-                    drawCard(3)
-                    cardPlace()
-                    drawn = True
-                    pygame.display.update()
-            elif event.key == K_e:
+            if event.key == K_e:
                 print("CPU's turn")
                 turn = 1
             elif event.key == K_ESCAPE:
@@ -152,14 +154,14 @@ while start: #Main loop for the game
                 sys.exit()
         elif event.type == MOUSEBUTTONUP:
             print(getCard())
-            enemyHealth, currentGears = playCard(hand[getCard()], currentGears, enemyHealth)
+            enemyHealth, currentGears = playCard(hand[getCard()], currentGears, enemyHealth, 1)
             displayUpdate()
             enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
             pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
             cardPlace()
             pygame.display.update()
             print(enemyHealth, currentGears)
-    elif turn == 1: #CPU's turn
+    elif turn == 1:  # CPU's turn
         drawn = False
         pygame.event.clear()
         event = pygame.event.wait()
@@ -167,13 +169,11 @@ while start: #Main loop for the game
             pygame.quit()
             sys.exit()
         elif event.type == KEYUP:
-            if event.key == K_a:
-                print("Players turn")
-                turn = 0
             if event.key == K_ESCAPE:
                 pygame.quit()
                 sys.exit()
-    if enemyHealth <= 0:
+        turn = 0
+    if enemyHealth <= 0 or playerHealth <= 0:
         pygame.quit()
         sys.exit()
     else:
