@@ -112,9 +112,12 @@ def displayUpdate():
         DISPLAYSURF.blit(hand[0].cardImage, (1100, 500))
 
 def getCard():
-    return
-
-
+  cardChecked = 0
+  for cards in range(0, len(hand)):
+    rect = hand[cardChecked].cardImage.get_rect(x=300, y=100)
+    if rect.collidepoint(pygame.mouse.get_pos()):
+      return hand[cardChecked]
+    cardChecked = cardChecked + 1
 
 enemyHealth = 100
 enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
