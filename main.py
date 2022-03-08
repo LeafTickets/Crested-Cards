@@ -153,8 +153,13 @@ while start:  # Main loop for the game
                 pygame.quit()
                 sys.exit()
         elif event.type == MOUSEBUTTONUP:
-            print(getCard())
-            enemyHealth, currentGears = playCard(hand[getCard()], currentGears, enemyHealth, 1)
+            mousex, mousey = pygame.mouse.get_pos()
+            if mousey > 800 or mousey < 700:
+                enemyHealth, currentGears = enemyHealth, currentGears
+            elif mousex > (len(hand) * 80) + 55 or mousex < 55:
+                enemyHealth, currentGears = enemyHealth, currentGears
+            else:
+                enemyHealth, currentGears = playCard(hand[getCard()], currentGears, enemyHealth, 1)
             displayUpdate()
             enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
             pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
