@@ -19,7 +19,7 @@ moved = False
 turn = 0
 hand2 = []
 drawn = False
-
+inCombat
 
 class card:  # All the cards info is stored here
     def __init__(self, nam):
@@ -38,7 +38,18 @@ class player:
   currentGears = 0
   health = 100
   copper = 0
-  
+
+class encounter:
+      def __init__(self, nam):
+        self.name = nam
+        print(self.name, 'constructed')
+      health = 50
+      currentGears = 3
+      deck = []
+      discard = []
+      hand = []
+      encounterImage = placeholder
+
 def cardGenerator(name, damage, type, gearCost):  # makes a new card
     name = card(name)
     name.damage = damage
@@ -49,6 +60,13 @@ def cardGenerator(name, damage, type, gearCost):  # makes a new card
         return name
     return name
 
+def encounterGenerator(name, health, startingGears, deck):
+      name = encounter(name)
+      name.health = health
+      name.encounterImage = pygame.image.load(r"C:\Users\streambox-31\PycharmProjects\pythonGame\encounterImages/" + name.name + ".png")
+      name.currentGears = startingGears
+      name.deck = deck
+      return name
 
 card3 = cardGenerator("card", 6, "Attack", -8)
 card4 = cardGenerator("card", 3, "Attack", -8)
@@ -126,6 +144,8 @@ def getCard():  # gets the card under the mouse
         cardChecked = cardChecked + 1
         x = x + 80
 
+def encounterLoad():
+  return
 
 enemyHealth = 100
 enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
@@ -135,6 +155,7 @@ DISPLAYSURF.blit(background, (0, 0))
 pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
 pygame.display.update()
 while start:  # Main loop for the game
+  if inCombat:  
     if turn == 0:  # Players turn
         if not drawn:
             drawCard(3)
@@ -179,8 +200,9 @@ while start:  # Main loop for the game
                 pygame.quit()
                 sys.exit()
         turn = 0
-    if enemyHealth <= 0 or player.health <= 0:
-        pygame.quit()
-        sys.exit()
+    if enemyHealth <= 0:
+        inCombat = False
     else:
         pygame.display.update()
+  elif not inCombat:
+    encounterLoad()
