@@ -17,7 +17,6 @@ button = pygame.image.load(r"C:\Users\streambox-31\PycharmProjects\pythonGame\Im
 start = True
 moved = False
 turn = 0
-hand = []
 hand2 = []
 drawn = False
 
@@ -32,9 +31,14 @@ class card:  # All the cards info is stored here
     gearCost = 0
     cardType = "Placeholder"
 
-
-
-
+class player:
+  hand = []
+  deck = []
+  discard = []
+  currentGears = 0
+  health = 100
+  copper = 0
+  
 def cardGenerator(name, damage, type, gearCost):  # makes a new card
     name = card(name)
     name.damage = damage
@@ -55,37 +59,38 @@ card8 = cardGenerator("card", 3, "Attack", -8)
 card9 = cardGenerator("card", 3, "Attack", -8)
 card10 = cardGenerator("card", 3, "Attack", -8)
 
+player.deck.append(card3, card4, card5, card6, card7, card8, card9, card10)
 
 def drawCard(amount):  # draws a certain amount of cards
         for nums in range(0, amount):
-            if len(hand) == 9:
+            if len(player.hand) == 9:
                 return
-            if deck == []:
-                if discard == []:
+            if player.deck == []:
+                if player.discard == []:
                     return
                 cardPop = 0
-                for cards in range(0, len(discard)):
-                    poppedCard = discard.pop(cardPop)
-                    deck.append(poppedCard)
-            print(deck)
-            chosenCard = deck.pop(randint(0, len(deck) - 1))
-            hand.append(chosenCard)
+                for cards in range(0, len(player.discard)):
+                    poppedCard = player.discard.pop(cardPop)
+                    player.deck.append(poppedCard)
+            print(player.deck)
+            chosenCard = player.deck.pop(randint(0, len(player.deck) - 1))
+            player.hand.append(chosenCard)
 
 def cardPlace():  # Places the cards in the hand on the screen
     cardSelection = 0
     cardx = 55
-    for cards in range(0, len(hand)):
-        DISPLAYSURF.blit(hand[cardSelection].cardImage, (cardx, 700))
+    for cards in range(0, len(player.hand)):
+        DISPLAYSURF.blit(player.hand[cardSelection].cardImage, (cardx, 700))
         cardSelection = cardSelection + 1
         cardx = cardx + 80
 
 
 def playCard(chosenCard, gears, health, target):  # for target, the player is 0 while the enemy is 1
     if target == 1:
-        discardedCard = hand.pop(hand.index(chosenCard))
-        discard.append(discardedCard)
+        discardedCard = player.hand.pop(player.hand.index(chosenCard))
+        player.discard.append(discardedCard)
     if target == 0:
-        discardedCard = hand2.pop(hand.index(chosenCard))
+        discardedCard = hand2.pop(player.hand.index(chosenCard))
         ediscard.append(discardedCard)
     value1 = health
     value2 = gears
@@ -102,20 +107,20 @@ def playCard(chosenCard, gears, health, target):  # for target, the player is 0 
 
 
 def displayUpdate():  # updates the display for all the cards and background
-    if hand == []:
+    if player.hand == []:
         DISPLAYSURF.blit(background, (0, 0))
-        DISPLAYSURF.blit(discard[-1].cardImage, (1100, 500))
+        DISPLAYSURF.blit(player.discard[-1].cardImage, (1100, 500))
     else:
         DISPLAYSURF.blit(background, (0, 0))
-        DISPLAYSURF.blit(hand[0].cardImage, (1100, 500))
+        DISPLAYSURF.blit(player.hand[0].cardImage, (1100, 500))
 
 
 def getCard():  # gets the card under the mouse
     cardChecked = 0
     x = 55
     y = 700
-    for cards in range(0, len(hand)):
-        rect = hand[cardChecked].cardImage.get_rect(x=x, y=y)
+    for cards in range(0, len(player.hand)):
+        rect = player.hand[cardChecked].cardImage.get_rect(x=x, y=y)
         if rect.collidepoint(pygame.mouse.get_pos()):
             return cardChecked
         cardChecked = cardChecked + 1
@@ -124,10 +129,6 @@ def getCard():  # gets the card under the mouse
 
 enemyHealth = 100
 enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
-playerHealth = 100
-currentGears = 0
-deck = [card3, card4, card5, card6, card7, card8, card9, card10]
-discard = []
 edeck = [card3, card4, card5, card6, card7, card8, card9, card10]
 ediscard = []
 DISPLAYSURF.blit(background, (0, 0))
@@ -155,11 +156,11 @@ while start:  # Main loop for the game
         elif event.type == MOUSEBUTTONUP:
             mousex, mousey = pygame.mouse.get_pos()
             if mousey > 800 or mousey < 700:
-                enemyHealth, currentGears = enemyHealth, currentGears
-            elif mousex > (len(hand) * 80) + 55 or mousex < 55:
+                enemyHealth, currentGears = enemyHealth, player.currentGears
+            elif mousex > (len(player.hand) * 80) + 55 or mousex < 55:
                 enemyHealth, currentGears = enemyHealth, currentGears
             else:
-                enemyHealth, currentGears = playCard(hand[getCard()], currentGears, enemyHealth, 1)
+                enemyHealth, currentGears = playCard(player.hand[getCard()], player.currentGears, enemyHealth, 1)
             displayUpdate()
             enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
             pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
@@ -178,7 +179,7 @@ while start:  # Main loop for the game
                 pygame.quit()
                 sys.exit()
         turn = 0
-    if enemyHealth <= 0 or playerHealth <= 0:
+    if enemyHealth <= 0 or player.health <= 0:
         pygame.quit()
         sys.exit()
     else:
