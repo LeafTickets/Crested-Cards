@@ -11,9 +11,10 @@ black = pygame.Color(0, 0, 0)
 white = pygame.Color(0, 0, 0)
 mousex = 0
 mousey = 0
-placeholder = pygame.image.load(r"C:\Users\streambox-31\PycharmProjects\pythonGame\Images\card.png")
-background = pygame.image.load(r"C:\Users\streambox-31\PycharmProjects\pythonGame\Images\pythonGameBackground.png")
-button = pygame.image.load(r"C:\Users\streambox-31\PycharmProjects\pythonGame\Images\Button.png")
+placeholder = pygame.image.load(r"C:\Users\jair1966\PycharmProjects\pythonGame\Images\card.png")
+ambientBackground = pygame.image.load(r"C:\Users\jair1966\PycharmProjects\pythonGame\Images\placeholder.png")
+background = pygame.image.load(r"C:\Users\jair1966\PycharmProjects\pythonGame\Images\gui.png")
+button = pygame.image.load(r"C:\Users\jair1966\PycharmProjects\pythonGame\Images\Button.png")
 start = True
 moved = False
 turn = 0
@@ -38,6 +39,8 @@ discard = []
 currentGears = 0
 health = 100
 copper = 0
+iron = 0
+silver = 0
 
 
 class encounter:
@@ -57,7 +60,7 @@ def cardGenerator(name, damage, type, gearCost):  # makes a new card
     name = card(name)
     name.damage = damage
     name.cardType = type
-    name.cardImage = pygame.image.load(r"C:\Users\streambox-31\PycharmProjects\pythonGame\Images/" + name.name + ".png")
+    name.cardImage = pygame.image.load(r"C:\Users\jair1966\PycharmProjects\pythonGame\Images/" + name.name + ".png")
     if type.lower() == "gear":
         name.gearCost = gearCost
         return name
@@ -67,10 +70,12 @@ def cardGenerator(name, damage, type, gearCost):  # makes a new card
 def encounterGenerator(name, health, startingGears, deck):
     name = encounter(name)
     name.health = health
-    name.encounterImage = pygame.image.load(r"C:\Users\streambox-31\PycharmProjects\pythonGame\encounterImages/" + name.name + ".png")
+    name.encounterImage = pygame.image.load(
+        r"C:\Users\jair1966\PycharmProjects\pythonGame\encounterImages/" + name.name + ".png")
     name.currentGears = startingGears
     name.deck = deck
     return name
+
 
 card3 = cardGenerator("card", 6, "Attack", -8)
 card4 = cardGenerator("card", 3, "Attack", -8)
@@ -82,6 +87,7 @@ card9 = cardGenerator("card", 3, "Attack", -8)
 card10 = cardGenerator("card", 3, "Attack", -8)
 
 encounter1 = encounterGenerator("Goblin", 25, 3, [card3, card4, card5])
+
 
 def drawCard(amount):  # draws a certain amount of cards
     for nums in range(0, amount):
@@ -133,9 +139,11 @@ def displayUpdate():  # updates the display for all the cards and background
     if hand == []:
         DISPLAYSURF.blit(background, (0, 0))
         DISPLAYSURF.blit(discard[-1].cardImage, (1100, 500))
+        DISPLAYSURF.blit(encounter1.encounterImage, (300, 150))
     else:
         DISPLAYSURF.blit(background, (0, 0))
         DISPLAYSURF.blit(hand[0].cardImage, (1100, 500))
+        DISPLAYSURF.blit(encounter1.encounterImage, (300, 150))
 
 
 def getCard():  # gets the card under the mouse
@@ -151,7 +159,8 @@ def getCard():  # gets the card under the mouse
 
 
 def encounterLoad():
-    health = randint(10, 100)
+    health = encounter1.health
+    pygame.display.update()
     return health
 
 
@@ -214,13 +223,25 @@ while start:  # Main loop for the game
         else:
             pygame.display.update()
     elif not inCombat:
-        enemyHealth = encounterLoad()
-        deck = [card3, card4, card5, card6, card7, card8, card9, card10]
-        hand = []
-        discard = []
-        drawn = False
-        currentGears = 0
-        DISPLAYSURF.blit(background, (0, 0))
-        pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
+        DISPLAYSURF.blit(ambientBackground, (0, 0))
         pygame.display.update()
-        inCombat = True
+        pygame.event.clear()
+        event = pygame.event.wait()
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == KEYUP:
+            if event.key == K_ESCAPE:
+                pygame.quit()
+                sys.exit()
+        elif event.type == MOUSEBUTTONUP:
+            enemyHealth = encounterLoad()
+            deck = [card3, card4, card5, card6, card7, card8, card9, card10]
+            hand = []
+            discard = []
+            drawn = False
+            currentGears = 0
+            DISPLAYSURF.blit(background, (0, 0))
+            pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
+            pygame.display.update()
+            inCombat = True
