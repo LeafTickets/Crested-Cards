@@ -14,6 +14,7 @@ mousey = 0
 placeholder = pygame.image.load(r"C:\Users\streambox-31\PycharmProjects\pythonGame\Images\card.png")
 background = pygame.image.load(r"C:\Users\streambox-31\PycharmProjects\pythonGame\Images\pythonGameBackground.png")
 button = pygame.image.load(r"C:\Users\streambox-31\PycharmProjects\pythonGame\Images\Button.png")
+cardBack = pygame.image.load(r"")
 start = True
 moved = False
 turn = 0
@@ -67,8 +68,7 @@ def cardGenerator(name, damage, type, gearCost):  # makes a new card
 def encounterGenerator(name, health, startingGears, deck):
     name = encounter(name)
     name.health = health
-    name.encounterImage = pygame.image.load(
-        r"C:\Users\streambox-31\PycharmProjects\pythonGame\encounterImages/" + name.name + ".png")
+    name.encounterImage = pygame.image.load(r"C:\Users\streambox-31\PycharmProjects\pythonGame\encounterImages/" + name.name + ".png")
     name.currentGears = startingGears
     name.deck = deck
     return name
@@ -164,7 +164,6 @@ ediscard = []
 DISPLAYSURF.blit(background, (0, 0))
 pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
 pygame.display.update()
-inCombat = True
 while start:  # Main loop for the game
     if inCombat:
         if turn == 0:  # Players turn
