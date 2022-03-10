@@ -72,7 +72,6 @@ def encounterGenerator(name, health, startingGears, deck):
     name.deck = deck
     return name
 
-
 card3 = cardGenerator("card", 6, "Attack", -8)
 card4 = cardGenerator("card", 3, "Attack", -8)
 card5 = cardGenerator("card", 3, "Attack", -8)
@@ -82,6 +81,7 @@ card8 = cardGenerator("card", 3, "Attack", -8)
 card9 = cardGenerator("card", 3, "Attack", -8)
 card10 = cardGenerator("card", 3, "Attack", -8)
 
+encounter1 = encounterGenerator("Goblin", 25, 3, [card3, card4, card5])
 
 def drawCard(amount):  # draws a certain amount of cards
     for nums in range(0, amount):
