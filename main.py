@@ -87,23 +87,38 @@ card8 = cardGenerator("card", 3, "Attack", -8)
 card9 = cardGenerator("card", 3, "Attack", -8)
 card10 = cardGenerator("card", 3, "Attack", -8)
 
-encounter1 = encounterGenerator("Goblin", 25, 3)
+encounter2 = encounterGenerator("Mimic", 50, 3)
 
 
-def drawCard(amount):  # draws a certain amount of cards
-    for nums in range(0, amount):
-        if len(hand) == 9:
-            return
-        if deck == []:
-            if discard == []:
+def drawCard(amount, target):  # draws a certain amount of cards
+    if target == 0:
+        for nums in range(0, amount):
+            if len(hand) == 9:
                 return
-            cardPop = 0
-            for cards in range(0, len(discard)):
-                poppedCard = discard.pop(cardPop)
-                deck.append(poppedCard)
-        print(deck)
-        chosenCard = deck.pop(randint(0, len(deck) - 1))
-        hand.append(chosenCard)
+            if deck == []:
+                if discard == []:
+                    return
+                cardPop = 0
+                for cards in range(0, len(discard)):
+                    poppedCard = discard.pop(cardPop)
+                    deck.append(poppedCard)
+            print(deck)
+            chosenCard = deck.pop(randint(0, len(deck) - 1))
+            hand.append(chosenCard)
+    if target == 1:
+        for nums in range(0, amount):
+            if len(hand2) == 9:
+                return
+            if edeck == []:
+                if ediscard == []:
+                    return
+                cardPop = 0
+                for cards in range(0, len(discard)):
+                    poppedCard = ediscard.pop(cardPop)
+                    edeck.append(poppedCard)
+            print(edeck)
+            chosenCard = edeck.pop(randint(0, len(edeck) - 1))
+            hand2.append(chosenCard)
 
 
 def cardPlace():  # Places the cards in the hand on the screen
@@ -142,7 +157,6 @@ def getWeight(card):
 
 def autoPlayCard(hand, health, gears):
     cardNum = 0
-    print(hand)
     for cards in range(0, len(hand)):
         cardChosen = hand[cardNum]
         cardChosen.weight = 0
@@ -158,7 +172,6 @@ def autoPlayCard(hand, health, gears):
                 cardChosen.weight = cardChosen.weight + 1
         cardNum = cardNum + 1
     hand.sort(key=getWeight, reverse=True)
-    print(hand)
     value1 = health
     value2 = gears
     for cards in range(0, len(hand)):
@@ -170,7 +183,7 @@ def displayUpdate():  # updates the display for all the cards and background
     if hand == []:
         DISPLAYSURF.blit(background, (0, 0))
         DISPLAYSURF.blit(discard[-1].cardImage, (1100, 500))
-        DISPLAYSURF.blit(encounter1.encounterImage, (300, 150))
+        DISPLAYSURF.blit(encounter2.encounterImage, (300, 150))
         enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
         playerHeathBar = pygame.Rect((20, 629), (playerHealth, 20))
         pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
@@ -178,7 +191,7 @@ def displayUpdate():  # updates the display for all the cards and background
     else:
         DISPLAYSURF.blit(background, (0, 0))
         DISPLAYSURF.blit(hand[0].cardImage, (1100, 500))
-        DISPLAYSURF.blit(encounter1.encounterImage, (300, 150))
+        DISPLAYSURF.blit(encounter2.encounterImage, (300, 150))
         enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
         playerHeathBar = pygame.Rect((20, 629), (playerHealth, 20))
         pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
@@ -198,7 +211,7 @@ def getCard():  # gets the card under the mouse
 
 
 def encounterLoad():
-    health = encounter1.health
+    health = encounter2.health
     pygame.display.update()
     return health
 
@@ -217,7 +230,7 @@ while start:  # Main loop for the game
         pygame.display.update()
         if turn == 0:  # Players turn
             if not drawn:
-                drawCard(3)
+                drawCard(3, 0)
                 cardPlace()
                 drawn = True
                 pygame.display.update()
@@ -247,8 +260,8 @@ while start:  # Main loop for the game
                 print(enemyHealth, currentGears)
         elif turn == 1:  # CPU's turn
             drawn = False
-            hand2 = [card4, card3, card5, card6, card7]
-            playerHealth, encounter1.currentGears = autoPlayCard(hand2, playerHealth, encounter1.currentGears)
+            drawCard(3, 1)
+            playerHealth, encounter2.currentGears = autoPlayCard(hand2, playerHealth, encounter2.currentGears)
             displayUpdate()
             pygame.display.update()
             print(playerHealth)
