@@ -171,10 +171,18 @@ def displayUpdate():  # updates the display for all the cards and background
         DISPLAYSURF.blit(background, (0, 0))
         DISPLAYSURF.blit(discard[-1].cardImage, (1100, 500))
         DISPLAYSURF.blit(encounter1.encounterImage, (300, 150))
+        enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
+        playerHeathBar = pygame.Rect((20, 629), (playerHealth, 20))
+        pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
+        pygame.draw.rect(DISPLAYSURF, (255, 0, 0), playerHeathBar)
     else:
         DISPLAYSURF.blit(background, (0, 0))
         DISPLAYSURF.blit(hand[0].cardImage, (1100, 500))
         DISPLAYSURF.blit(encounter1.encounterImage, (300, 150))
+        enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
+        playerHeathBar = pygame.Rect((20, 629), (playerHealth, 20))
+        pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
+        pygame.draw.rect(DISPLAYSURF, (255, 0, 0), playerHeathBar)
 
 
 def getCard():  # gets the card under the mouse
@@ -197,6 +205,7 @@ def encounterLoad():
 
 enemyHealth = 100
 enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
+playerHeathBar = pygame.Rect((100, 100), (playerHealth, 20))
 deck = [card3, card4, card5, card6, card7, card8, card9, card10]
 edeck = [card3, card4, card5, card6, card7, card8, card9, card10]
 ediscard = []
@@ -233,8 +242,6 @@ while start:  # Main loop for the game
                 else:
                     enemyHealth, currentGears = playCard(hand[getCard()], currentGears, enemyHealth, 1)
                 displayUpdate()
-                enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
-                pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
                 cardPlace()
                 pygame.display.update()
                 print(enemyHealth, currentGears)
@@ -242,6 +249,8 @@ while start:  # Main loop for the game
             drawn = False
             hand2 = [card4, card3, card5, card6, card7]
             playerHealth, encounter1.currentGears = autoPlayCard(hand2, playerHealth, encounter1.currentGears)
+            displayUpdate()
+            pygame.display.update()
             print(playerHealth)
             pygame.event.clear()
             event = pygame.event.wait()
@@ -255,6 +264,9 @@ while start:  # Main loop for the game
             turn = 0
         if enemyHealth <= 0:
             inCombat = False
+        if playerHealth <= 0:
+            pygame.quit()
+            sys.exit()
         else:
             pygame.display.update()
     elif not inCombat:
