@@ -2,6 +2,7 @@ import pygame
 import sys
 from pygame.locals import *
 from random import randint
+import os
 
 pygame.init()  # Starts pygame
 DISPLAYSURF = pygame.display.set_mode((1200, 900))
@@ -11,10 +12,11 @@ black = pygame.Color(0, 0, 0)
 white = pygame.Color(0, 0, 0)
 mousex = 0
 mousey = 0
-placeholder = pygame.image.load(r"C:\Users\jair1966\PycharmProjects\pythonGame\Images\card.png")
-ambientBackground = pygame.image.load(r"C:\Users\jair1966\PycharmProjects\pythonGame\Images\main menu.png")
-background = pygame.image.load(r"C:\Users\jair1966\PycharmProjects\pythonGame\Images\gui.png")
-button = pygame.image.load(r"C:\Users\jair1966\PycharmProjects\pythonGame\Images\Button.png")
+directory = os.getcwd()
+placeholder = pygame.image.load(directory + "\Images\card.png")
+ambientBackground = pygame.image.load(directory + "\Images\main menu.png")
+background = pygame.image.load(directory + "\Images\gui.png")
+button = pygame.image.load(directory + "\Images\Button.png")
 playerHealth = 100
 start = True
 moved = False
@@ -22,6 +24,7 @@ turn = 0
 hand2 = []
 drawn = False
 inCombat = False
+font = pygame.font.Font('freesansbold.ttf', 16)
 crests = ["none", "none", "none", "none"]
 
 
@@ -68,7 +71,7 @@ def cardGenerator(name, damage, type, gearCost, copperChange=0, ironChange=0, si
     name = card(name)
     name.damage = damage
     name.cardType = type
-    name.cardImage = pygame.image.load(r"C:\Users\jair1966\PycharmProjects\pythonGame\Images/" + name.name + ".png")
+    name.cardImage = pygame.image.load(directory + "\Images/" + name.name + ".png")
     if type.lower() == "crest":
         name.copper, name.iron, name.silver, name.crestSpot = copperChange, ironChange, silverChange, crestSpot
     if type.lower() == "gear":
@@ -81,7 +84,7 @@ def encounterGenerator(name, health, startingGears):
     name = encounter(name)
     name.health = health
     name.encounterImage = pygame.image.load(
-        r"C:\Users\jair1966\PycharmProjects\pythonGame\encounterImages/" + name.name + ".png")
+        directory + "\encounterImages/" + name.name + ".png")
     name.currentGears = startingGears
     return name
 
@@ -125,9 +128,10 @@ def drawCard(amount, target):  # draws a certain amount of cards
                 cardPop = 0
                 if ediscard == []:
                     return
-                for cards in range(0, len(discard)):
-                    poppedCard = ediscard.pop(cardPop)
-                    edeck.append(poppedCard)
+                else:
+                    for cards in range(0, len(discard) - 1):
+                        poppedCard = ediscard.pop(cardPop)
+                        edeck.append(poppedCard)
             chosenCard = edeck.pop(randint(0, len(edeck) - 1))
             hand2.append(chosenCard)
 
@@ -145,7 +149,7 @@ def crestPlacer(crests, card):
     if len(crests) > 4:
         return
     crests[card.crestSpot] = card
-
+    print(crests)
 
 def crestActivator(crests, copper, iron, silver):
     crestChosen = 0
@@ -157,18 +161,19 @@ def crestActivator(crests, copper, iron, silver):
             if abs(crest.copper) > copper:
                 crestChosen = crestChosen + 1
                 continue
-        if crest.copper < 0:
+        if crest.iron < 0:
             if abs(crest.iron) > iron:
                 crestChosen = crestChosen + 1
                 continue
-        if crest.copper < 0:
+        if crest.silver < 0:
             if abs(crest.silver) > silver:
                 crestChosen = crestChosen + 1
                 continue
-        copper = crest.copper + copper
-        iron = crest.iron + iron
-        silver = crest.silver + silver
-        crestChosen = crestChosen + 1
+        else:
+            copper = crest.copper + copper
+            iron = crest.iron + iron
+            silver = crest.silver + silver
+            crestChosen = crestChosen + 1
     return copper, iron, silver
 
 
@@ -261,8 +266,8 @@ def getCard():  # gets the card under the mouse
         x = x + 80
 
 
-def encounterLoad():
-    health = encounter2.health
+def encounterLoad(encounter):
+    health = encounter.health
     pygame.display.update()
     return health
 
@@ -277,11 +282,11 @@ while start:  # Main loop for the game
     if inCombat:
         pygame.display.update()
         if turn == 0:  # Players turn
-            copper, iron, silver = crestActivator(crests, copper, iron, silver)
             if not drawn:
                 drawCard(3, 0)
                 cardPlace()
                 drawn = True
+                copper, iron, silver = crestActivator(crests, copper, iron, silver)
                 pygame.display.update()
             pygame.event.clear()
             event = pygame.event.wait()
@@ -344,8 +349,7 @@ while start:  # Main loop for the game
                 pygame.quit()
                 sys.exit()
         elif event.type == MOUSEBUTTONUP:
-            enemyHealth = encounterLoad()
-            deck = [card3, card4, card5, card6, card7, card8, card9, card10, card11]
+            enemyHealth = encounterLoad(encounter2)
             hand = []
             discard = []
             drawn = False
