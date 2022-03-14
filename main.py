@@ -33,7 +33,11 @@ class card:  # All the cards info is stored here
     damage = 0
     gearCost = 0
     cardType = "Placeholder"
+    crestSpot = -1
     weight = 0
+    copper = 0
+    iron = 0
+    silver = 0
 
 
 hand = []
@@ -58,7 +62,7 @@ class encounter:
     encounterImage = placeholder
 
 
-def cardGenerator(name, damage, type, gearCost):  # makes a new card
+def cardGenerator(name, damage, type, gearCost, copperChange=0, ironChange=0, silverChange=0, crestSpot=-1):  # makes a new card
     name = card(name)
     name.damage = damage
     name.cardType = type
@@ -67,6 +71,9 @@ def cardGenerator(name, damage, type, gearCost):  # makes a new card
         name.gearCost = gearCost
         return name
     return name
+    if type.lower() == "crest":
+        name.copper, name.iron, name.silver, name.crestSpot = copperChange, ironChange, silverChange, crestSpot
+
 
 
 def encounterGenerator(name, health, startingGears):
