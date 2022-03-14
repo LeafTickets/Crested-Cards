@@ -81,7 +81,7 @@ def encounterGenerator(name, health, startingGears):
 card3 = cardGenerator("card", 6, "Attack", -8)
 card4 = cardGenerator("card", 3, "Attack", -8)
 card5 = cardGenerator("card", 3, "Attack", -8)
-card6 = cardGenerator("card1", 0, "Gear", 4)
+card6 = cardGenerator("card2", 0, "Gear", 4)
 card7 = cardGenerator("card1", 50, "Gear", -5)
 card8 = cardGenerator("card", 3, "Attack", -8)
 card9 = cardGenerator("card", 3, "Attack", -8)
@@ -102,7 +102,6 @@ def drawCard(amount, target):  # draws a certain amount of cards
                 for cards in range(0, len(discard)):
                     poppedCard = discard.pop(cardPop)
                     deck.append(poppedCard)
-            print(deck)
             chosenCard = deck.pop(randint(0, len(deck) - 1))
             hand.append(chosenCard)
     if target == 1:
@@ -116,7 +115,6 @@ def drawCard(amount, target):  # draws a certain amount of cards
                 for cards in range(0, len(discard)):
                     poppedCard = ediscard.pop(cardPop)
                     edeck.append(poppedCard)
-            print(edeck)
             chosenCard = edeck.pop(randint(0, len(edeck) - 1))
             hand2.append(chosenCard)
 
@@ -175,6 +173,12 @@ def autoPlayCard(hand, health, gears):
     value1 = health
     value2 = gears
     for cards in range(0, len(hand)):
+        displayUpdate()
+        pygame.display.update()
+        pygame.time.delay(100)
+        DISPLAYSURF.blit(hand[0].cardImage, (500, 500))
+        pygame.display.update()
+        pygame.time.delay(500)
         value1, value2 = playCard(hand[0], value2, value1, 0)
     return value1, value2
 
