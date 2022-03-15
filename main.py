@@ -101,7 +101,7 @@ crest1 = cardGenerator("card2", 0, "Crest", -8, 2, 2, 0, 0)
 crest2 = cardGenerator("card2", 5, "Crest", 1, 0, -2, 0, 1)
 
 
-encounter2 = encounterGenerator("Mimic", 50, 3)
+encounter2 = encounterGenerator("enemy", 50, 3)
 
 deck = [card3, card4, card5, crest1, card6, card7, card8, card9, card10, crest2]
 edeck = [card3, card4, card5, card6, card7, card8, card9, card10]
