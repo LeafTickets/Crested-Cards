@@ -13,10 +13,10 @@ white = pygame.Color(0, 0, 0)
 mousex = 0
 mousey = 0
 directory = os.getcwd()
-placeholder = pygame.image.load(directory + "\Images\card.png")
-ambientBackground = pygame.image.load(directory + "\Images\main menu.png")
-background = pygame.image.load(directory + "\Images\gui.png")
-button = pygame.image.load(directory + "\Images\Button.png")
+placeholder = pygame.image.load(directory + "/Images/card.png")
+ambientBackground = pygame.image.load(directory + "/Images/main menu.png")
+background = pygame.image.load(directory + "/Images/gui.png")
+button = pygame.image.load(directory + "/Images/Button.png")
 playerHealth = 100
 start = True
 moved = False
@@ -71,7 +71,7 @@ def cardGenerator(name, damage, type, gearCost, copperChange=0, ironChange=0, si
     name = card(name)
     name.damage = damage
     name.cardType = type
-    name.cardImage = pygame.image.load(directory + "\Images/" + name.name + ".png")
+    name.cardImage = pygame.image.load(directory + "/Images/" + name.name + ".png")
     if type.lower() == "crest":
         name.copper, name.iron, name.silver, name.crestSpot = copperChange, ironChange, silverChange, crestSpot
     if type.lower() == "gear":
@@ -84,7 +84,7 @@ def encounterGenerator(name, health, startingGears):
     name = encounter(name)
     name.health = health
     name.encounterImage = pygame.image.load(
-        directory + "\encounterImages/" + name.name + ".png")
+        directory + "/encounterImages/" + name.name + ".png")
     name.currentGears = startingGears
     return name
 
@@ -97,11 +97,13 @@ card7 = cardGenerator("card1", 50, "Gear", -5)
 card8 = cardGenerator("card", 3, "Attack", -8)
 card9 = cardGenerator("card", 3, "Attack", -8)
 card10 = cardGenerator("card", 3, "Attack", -8)
-card11 = cardGenerator("card2", 0, "Crest", -8, 2, 2, 0, 0)
+crest1 = cardGenerator("card2", 0, "Crest", -8, 2, 2, 0, 0)
+crest2 = cardGenerator("card2", 5, "Crest", 1, 0, -2, 0, 1)
+
 
 encounter2 = encounterGenerator("Mimic", 50, 3)
 
-deck = [card3, card4, card5, card11, card6, card7, card8, card9, card10]
+deck = [card3, card4, card5, crest1, card6, card7, card8, card9, card10, crest2]
 edeck = [card3, card4, card5, card6, card7, card8, card9, card10]
 ediscard = []
 
@@ -151,11 +153,15 @@ def crestPlacer(crests, card):
     crests[card.crestSpot] = card
     print(crests)
 
-def crestActivator(crests, copper, iron, silver):
+def crestActivator(crests, copper, iron, silver, health, gears):
     crestChosen = 0
     for things in range(0, len(crests)):
         crest = crests[crestChosen]
         if crest == "none":
+            continue
+        if crest.gearCost < 0:
+          if abs(crest.gearCost) > gears:
+            crestChosen = crestChosen + 1
             continue
         if crest.copper < 0:
             if abs(crest.copper) > copper:
@@ -170,11 +176,13 @@ def crestActivator(crests, copper, iron, silver):
                 crestChosen = crestChosen + 1
                 continue
         else:
+            gears = crest.gearCost + gears
+            health = health + crest.damage
             copper = crest.copper + copper
             iron = crest.iron + iron
             silver = crest.silver + silver
             crestChosen = crestChosen + 1
-    return copper, iron, silver
+    return copper, iron, silver, health, gears
 
 
 def playCard(chosenCard, gears, health, target):  # for target, the player is 0 while the enemy is 1
@@ -286,7 +294,7 @@ while start:  # Main loop for the game
                 drawCard(3, 0)
                 cardPlace()
                 drawn = True
-                copper, iron, silver = crestActivator(crests, copper, iron, silver)
+                copper, iron, silver, enemyHealth, currentGears = crestActivator(crests, copper, iron, silver, enemyHealth, currentGears)
                 pygame.display.update()
             pygame.event.clear()
             event = pygame.event.wait()
