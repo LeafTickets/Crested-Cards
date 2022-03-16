@@ -16,6 +16,7 @@ directory = os.getcwd()
 placeholder = pygame.image.load(directory + "/Images/card.png")
 ambientBackground = pygame.image.load(directory + "/Images/main menu.png")
 background = pygame.image.load(directory + "/Images/gui.png")
+background2 = pygame.image.load(directory + "/Images/bg.png")
 button = pygame.image.load(directory + "/Images/Button.png")
 playerHealth = 100
 start = True
@@ -101,7 +102,9 @@ crest1 = cardGenerator("card2", 0, "Crest", -8, 2, 2, 0, 0)
 crest2 = cardGenerator("card2", 5, "Crest", 1, 0, -2, 0, 1)
 
 encounter1 = encounterGenerator("Mimic", 75, 1)
-encounter2 = encounterGenerator("enemy", 50, 3)
+encounter2 = encounterGenerator("eneny", 50, 3)
+
+encounters = [encounter1, encounter2]
 
 deck = [card3, card4, card5, crest1, card6, card7, card8, card9, card10, crest2]
 edeck = [card3, card4, card5, card6, card7, card8, card9, card10]
@@ -131,7 +134,9 @@ def drawCard(amount, target):  # draws a certain amount of cards
                 if ediscard == []:
                     return
                 else:
-                    for cards in range(0, len(discard) - 1):
+                    for cards in range(0, len(discard)):
+                        if ediscard == []:
+                            return
                         poppedCard = ediscard.pop(cardPop)
                         edeck.append(poppedCard)
             chosenCard = edeck.pop(randint(0, len(edeck) - 1))
@@ -245,6 +250,7 @@ def autoPlayCard(hand, health, gears):
 
 def displayUpdate():  # updates the display for all the cards and background
     if hand == []:
+        DISPLAYSURF.blit(background2, (0, 0))
         DISPLAYSURF.blit(background, (0, 0))
         DISPLAYSURF.blit(discard[-1].cardImage, (1100, 500))
         DISPLAYSURF.blit(encounter2.encounterImage, (300, 150))
@@ -253,6 +259,7 @@ def displayUpdate():  # updates the display for all the cards and background
         pygame.draw.rect(DISPLAYSURF, (255, 0, 0), enemyHealthBar)
         pygame.draw.rect(DISPLAYSURF, (255, 0, 0), playerHeathBar)
     else:
+        DISPLAYSURF.blit(background2, (0, 0))
         DISPLAYSURF.blit(background, (0, 0))
         DISPLAYSURF.blit(hand[0].cardImage, (1100, 500))
         DISPLAYSURF.blit(encounter2.encounterImage, (300, 150))
@@ -357,7 +364,7 @@ while start:  # Main loop for the game
                 pygame.quit()
                 sys.exit()
         elif event.type == MOUSEBUTTONUP:
-            enemyHealth = encounterLoad(encounter+randint(1, 2))
+            enemyHealth = encounterLoad(encounters[randint(0, 1)])
             hand = []
             discard = []
             drawn = False
