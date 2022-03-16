@@ -100,7 +100,7 @@ card10 = cardGenerator("card", 3, "Attack", -8)
 crest1 = cardGenerator("card2", 0, "Crest", -8, 2, 2, 0, 0)
 crest2 = cardGenerator("card2", 5, "Crest", 1, 0, -2, 0, 1)
 
-
+encounter1 = encounterGenerator("Mimic", 75, 1)
 encounter2 = encounterGenerator("enemy", 50, 3)
 
 deck = [card3, card4, card5, crest1, card6, card7, card8, card9, card10, crest2]
@@ -357,7 +357,7 @@ while start:  # Main loop for the game
                 pygame.quit()
                 sys.exit()
         elif event.type == MOUSEBUTTONUP:
-            enemyHealth = encounterLoad(encounter2)
+            enemyHealth = encounterLoad(encounter+randint(1, 2))
             hand = []
             discard = []
             drawn = False
