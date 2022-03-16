@@ -220,12 +220,12 @@ def autoPlayCard(hand, health, gears):
         cardChosen.weight = 0
         if cardChosen.cardType == "Gear":
             if cardChosen.gearCost > 0:
-                cardChosen.weight = cardChosen.weight + 5
+                cardChosen.weight = cardChosen.weight + 7
             if cardChosen.gearCost < 0:
-                cardChosen.weight = cardChosen.weight + 3
+                cardChosen.weight = cardChosen.weight + 4
         if cardChosen.cardType == "Attack":
             if cardChosen.damage > 5:
-                cardChosen.weight = cardChosen.weight + 2
+                cardChosen.weight = cardChosen.weight + 3
             else:
                 cardChosen.weight = cardChosen.weight + 1
         cardNum = cardNum + 1
