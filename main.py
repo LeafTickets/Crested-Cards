@@ -2,6 +2,7 @@ import pygame
 import sys
 from pygame.locals import *
 from random import randint
+from crests import crestActivator
 import os
 
 pygame.init()  # Starts pygame
@@ -29,6 +30,14 @@ font = pygame.font.Font('freesansbold.ttf', 16)
 crests = ["none", "none", "none", "none"]
 
 
+class crest:
+    def __init__(self, nam, effects, spot):
+        self.name = nam
+        self.effects = effects  # List order, health, gears, copper, iron, silver
+        self.crestSpot = spot
+        print(self.name, 'constructed')
+
+
 class card:  # All the cards info is stored here
     def __init__(self, nam):
         self.name = nam
@@ -38,11 +47,8 @@ class card:  # All the cards info is stored here
     damage = 0
     gearCost = 0
     cardType = "Placeholder"
-    crestSpot = -1
     weight = 0
-    copper = 0
-    iron = 0
-    silver = 0
+    crestEffects = "none"
 
 
 hand = []
@@ -67,17 +73,18 @@ class encounter:
     encounterImage = placeholder
 
 
-def cardGenerator(name, damage, type, gearCost, copperChange=0, ironChange=0, silverChange=0,
-                  crestSpot=0):  # makes a new card
+def cardGenerator(name, damage, type, gearCost, effects=None, spot=0):  # makes a new card
+    if effects is None:
+        effects = []
     name = card(name)
     name.damage = damage
     name.cardType = type
     name.cardImage = pygame.image.load(directory + "/Images/" + name.name + ".png")
-    if type.lower() == "crest":
-        name.copper, name.iron, name.silver, name.crestSpot = copperChange, ironChange, silverChange, crestSpot
     if type.lower() == "gear":
         name.gearCost = gearCost
         return name
+    if type.lower() == "crest":
+        name.crestEffects = crest(name, effects, spot)
     return name
 
 
@@ -98,8 +105,8 @@ card7 = cardGenerator("card crest_1", 50, "Gear", -5)
 card8 = cardGenerator("card", 3, "Attack", -8)
 card9 = cardGenerator("card", 3, "Attack", -8)
 card10 = cardGenerator("card", 3, "Attack", -8)
-crest1 = cardGenerator("Project_1", 0, "Crest", -8, 2, 2, 0, 0)
-crest2 = cardGenerator("Project_1", 5, "Crest", 1, 0, -2, 0, 1)
+crest1 = cardGenerator("Project_1", 0, "Crest", -8, [5, -1, 0, 0, 0], 0)
+crest2 = cardGenerator("Project_1", 0, "Crest", -8, [0, 1, -1, 0, 0], 1)
 
 encounter1 = encounterGenerator("Mimic", 75, 1)
 encounter2 = encounterGenerator("eneny", 50, 3)
@@ -155,39 +162,8 @@ def cardPlace():  # Places the cards in the hand on the screen
 def crestPlacer(crests, card):
     if len(crests) > 4:
         return
-    crests[card.crestSpot] = card
+    crests[(card.crestEffects).crestSpot] = card.crestEffects
     print(crests)
-
-def crestActivator(crests, copper, iron, silver, health, gears):
-    crestChosen = 0
-    for things in range(0, len(crests)):
-        crest = crests[crestChosen]
-        if crest == "none":
-            continue
-        if crest.gearCost < 0:
-          if abs(crest.gearCost) > gears:
-            crestChosen = crestChosen + 1
-            continue
-        if crest.copper < 0:
-            if abs(crest.copper) > copper:
-                crestChosen = crestChosen + 1
-                continue
-        if crest.iron < 0:
-            if abs(crest.iron) > iron:
-                crestChosen = crestChosen + 1
-                continue
-        if crest.silver < 0:
-            if abs(crest.silver) > silver:
-                crestChosen = crestChosen + 1
-                continue
-        else:
-            gears = crest.gearCost + gears
-            health = health + crest.damage
-            copper = crest.copper + copper
-            iron = crest.iron + iron
-            silver = crest.silver + silver
-            crestChosen = crestChosen + 1
-    return copper, iron, silver, health, gears
 
 
 def playCard(chosenCard, gears, health, target):  # for target, the player is 0 while the enemy is 1
@@ -298,10 +274,11 @@ while start:  # Main loop for the game
         pygame.display.update()
         if turn == 0:  # Players turn
             if not drawn:
+                playerHealth, currentGears, copper, iron, silver = crestActivator(crests, copper, iron, silver, playerHealth, currentGears)
+                print(playerHealth, currentGears, copper, iron, silver)
                 drawCard(3, 0)
                 cardPlace()
                 drawn = True
-                copper, iron, silver, enemyHealth, currentGears = crestActivator(crests, copper, iron, silver, enemyHealth, currentGears)
                 pygame.display.update()
             pygame.event.clear()
             event = pygame.event.wait()
@@ -333,7 +310,7 @@ while start:  # Main loop for the game
             playerHealth, encounter2.currentGears = autoPlayCard(hand2, playerHealth, encounter2.currentGears)
             displayUpdate()
             pygame.display.update()
-            print(playerHealth, copper, iron, silver)
+            print(playerHealth, currentGears, copper, iron, silver)
             pygame.event.clear()
             event = pygame.event.wait()
             if event.type == QUIT:
