@@ -38,7 +38,7 @@ class crest:
         print(self.name, 'constructed')
 
 
-class card:  # All the cards info is stored here
+class card:  # All the card's info is stored here
     def __init__(self, nam):
         self.name = nam
         print(self.name, 'constructed')
@@ -97,16 +97,16 @@ def encounterGenerator(name, health, startingGears):
     return name
 
 
-card3 = cardGenerator("card", 6, "Attack", -8)
-card4 = cardGenerator("card", 3, "Attack", -8)
-card5 = cardGenerator("card", 3, "Attack", -8)
-card6 = cardGenerator("card crest_1", 0, "Gear", 4)
-card7 = cardGenerator("card crest_1", 50, "Gear", -5)
-card8 = cardGenerator("card", 3, "Attack", -8)
-card9 = cardGenerator("card", 3, "Attack", -8)
-card10 = cardGenerator("card", 3, "Attack", -8)
-crest1 = cardGenerator("Project_1", 0, "Crest", -8, [5, -1, 0, 0, 0], 0)
-crest2 = cardGenerator("Project_1", 0, "Crest", -8, [0, 1, -1, 0, 0], 1)
+card3 = cardGenerator("Basic_AttackLv3", 6, "Attack", -8)
+card4 = cardGenerator("Basic_AttackLv2", 3, "Attack", -8)
+card5 = cardGenerator("Basic_AttackLv2", 3, "Attack", -8)
+card6 = cardGenerator("Disassemble", 0, "Gear", 4)
+card7 = cardGenerator("Gear_Burst", 50, "Gear", -5)
+card8 = cardGenerator("Basic_AttackLv2", 3, "Attack", -8)
+card9 = cardGenerator("Basic_AttackLv2", 3, "Attack", -8)
+card10 = cardGenerator("Basic_AttackLv2", 3, "Attack", -8)
+crest1 = cardGenerator("Mechanized_Healing", 0, "Crest", -8, [5, -1, 0, 0, 0], 0)
+crest2 = cardGenerator("Copper_Gear_Factory", 0, "Crest", -8, [0, 1, -1, 0, 0], 1)
 
 encounter1 = encounterGenerator("Mimic", 75, 1)
 encounter2 = encounterGenerator("eneny", 50, 3)
@@ -123,8 +123,8 @@ def drawCard(amount, target):  # draws a certain amount of cards
         for nums in range(0, amount):
             if len(hand) == 9:
                 return
-            if deck == []:
-                if discard == []:
+            if not deck:
+                if not discard:
                     return
                 cardPop = 0
                 for cards in range(0, len(discard)):
@@ -136,13 +136,13 @@ def drawCard(amount, target):  # draws a certain amount of cards
         for nums in range(0, amount):
             if len(hand2) == 9:
                 return
-            if edeck == []:
+            if not edeck:
                 cardPop = 0
-                if ediscard == []:
+                if not ediscard:
                     return
                 else:
                     for cards in range(0, len(discard)):
-                        if ediscard == []:
+                        if not ediscard:
                             return
                         poppedCard = ediscard.pop(cardPop)
                         edeck.append(poppedCard)
@@ -150,11 +150,10 @@ def drawCard(amount, target):  # draws a certain amount of cards
             hand2.append(chosenCard)
 
 
-def cardPlace():  # Places the cards in the hand on the screen
+def cardPlace(cardx=55, cardy=785):  # Places the cards in the hand on the screen
     cardSelection = 0
-    cardx = 55
     for cards in range(0, len(hand)):
-        DISPLAYSURF.blit(hand[cardSelection].cardImage, (cardx, 785))
+        DISPLAYSURF.blit(hand[cardSelection].cardImage, (cardx, cardy))
         cardSelection = cardSelection + 1
         cardx = cardx + 80
 
@@ -162,7 +161,7 @@ def cardPlace():  # Places the cards in the hand on the screen
 def crestPlacer(crests, card):
     if len(crests) > 4:
         return
-    crests[(card.crestEffects).crestSpot] = card.crestEffects
+    crests[card.crestEffects.crestSpot] = card.crestEffects
     print(crests)
 
 
@@ -225,7 +224,7 @@ def autoPlayCard(hand, health, gears):
 
 
 def displayUpdate():  # updates the display for all the cards and background
-    if hand == []:
+    if not hand:
         DISPLAYSURF.blit(background2, (0, 0))
         DISPLAYSURF.blit(background, (0, 0))
         DISPLAYSURF.blit(discard[-1].cardImage, (1030, 600))
@@ -245,10 +244,8 @@ def displayUpdate():  # updates the display for all the cards and background
         pygame.draw.rect(DISPLAYSURF, (255, 0, 0), playerHeathBar)
 
 
-def getCard():  # gets the card under the mouse
+def getCard(x=55, y=785):  # gets the card under the mouse
     cardChecked = 0
-    x = 55
-    y = 785
     for cards in range(0, len(hand)):
         rect = hand[cardChecked].cardImage.get_rect(x=x, y=y)
         if rect.collidepoint(pygame.mouse.get_pos()):
@@ -263,6 +260,48 @@ def encounterLoad(encounter):
     return health
 
 
+def randomLootGenerator(amount):
+    x = 520
+    y = 450
+    drawnCards = []
+    cardTypes = ['gear+', 'crest', 'attack', 'gear-']
+    for cards in range(amount):
+        cardType = cardTypes[randint(0, 2)]
+        if cardType == 'attack':
+            card1 = cardGenerator("card", randint(0, 6), "Attack", -8)
+        elif cardType == 'gear+':
+            card1 = cardGenerator("card crest_1", 0, "Gear", randint(2, 6))
+        elif cardType == 'gear-':
+            card1 = cardGenerator("card crest_1", randint(20, 100), "Gear", randint(-2, -6))
+        else:
+            card1 = cardGenerator("Project_1", 0, "Crest", -8,
+                                  [randint(-2, 5), randint(-2, 2), randint(-2, 2), randint(-2, 2), randint(-2, 2)],
+                                  randint(0, 3))
+        drawnCards.append(card1)
+    cardChecked = 0
+    cardSelection = 0
+    for cards in range(0, len(drawnCards)):
+        DISPLAYSURF.blit(drawnCards[cardSelection].cardImage, (x, y))
+        cardSelection = cardSelection + 1
+        x = x + 80
+        pygame.display.update()
+    x = 520
+    while True:
+        pygame.event.clear()
+        event = pygame.event.wait()
+        if event.type == MOUSEBUTTONUP:
+            for cards in range(0, len(hand)):
+                rect = drawnCards[cardChecked].cardImage.get_rect(x=x, y=y)
+                if rect.collidepoint(pygame.mouse.get_pos()):
+                    print(drawnCards[cardChecked].damage)
+                    return drawnCards[cardChecked]
+                cardChecked = cardChecked + 1
+                x = x + 80
+        else:
+            continue
+
+
+
 enemyHealth = 100
 enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
 playerHeathBar = pygame.Rect((100, 100), (playerHealth, 20))
@@ -274,7 +313,8 @@ while start:  # Main loop for the game
         pygame.display.update()
         if turn == 0:  # Players turn
             if not drawn:
-                playerHealth, currentGears, copper, iron, silver = crestActivator(crests, copper, iron, silver, playerHealth, currentGears)
+                playerHealth, currentGears, copper, iron, silver = crestActivator(crests, copper, iron, silver,
+                                                                                  playerHealth, currentGears)
                 print(playerHealth, currentGears, copper, iron, silver)
                 drawCard(3, 0)
                 cardPlace()
@@ -322,6 +362,9 @@ while start:  # Main loop for the game
                     sys.exit()
             turn = 0
         if enemyHealth <= 0:
+            DISPLAYSURF.blit(ambientBackground, (0, 0))
+            pygame.display.update()
+            deck.append(randomLootGenerator(3))
             inCombat = False
         if playerHealth <= 0:
             pygame.quit()

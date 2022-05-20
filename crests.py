@@ -54,7 +54,6 @@ def crestActivator(crests, copper, iron, silver, health, gears):
     return health, gears, copper, iron, silver
 
 
-
 def cardGenerator(name, damage, type, gearCost, effects=None, spot=0):  # makes a new card
     if effects is None:
         effects = []
