@@ -2,7 +2,7 @@ import pygame
 import sys
 from pygame.locals import *
 from random import randint
-from crests import crestActivator
+from crestFunctions import crestActivator
 import os
 
 pygame.init()  # Starts pygame
@@ -53,6 +53,7 @@ class card:  # All the card's info is stored here
 
 hand = []
 discard = []
+crestDiscard = []
 currentGears = 0
 health = 100
 copper = 0
@@ -158,24 +159,31 @@ def cardPlace(cardx=55, cardy=785):  # Places the cards in the hand on the scree
         cardx = cardx + 80
 
 
-def crestPlacer(crests, card):
-    if len(crests) > 4:
-        return
-    crests[card.crestEffects.crestSpot] = card.crestEffects
-    print(crests)
+def crestChecker(crest):
+    if crests[crest.crestEffects.crestSpot] != 'none':
+        poppedCrest = crests.pop(crests.index(crest))
+        crests.append()
+        discard.append(poppedCrest)
 
 
 def playCard(chosenCard, gears, health, target):  # for target, the player is 0 while the enemy is 1
     if target == 1:
         discardedCard = hand.pop(hand.index(chosenCard))
-        discard.append(discardedCard)
+        if discardedCard.cardType == "Crest":
+            crestChecker(chosenCard)
+            crestDiscard.append(discardedCard)
+        else:
+            discard.append(discardedCard)
     if target == 0:
         discardedCard = hand2.pop(0)
         ediscard.append(discardedCard)
     value1 = health
     value2 = gears
     if chosenCard.cardType == "Crest":
-        crestPlacer(crests, chosenCard)
+        if len(crests) > 4:
+            return
+        crests[chosenCard.crestEffects.crestSpot] = chosenCard.crestEffects
+        print(crests)
         return value1, value2
     if chosenCard.damage > 0:
         value1 = health - chosenCard.damage
@@ -256,8 +264,9 @@ def getCard(x=55, y=785):  # gets the card under the mouse
 
 def encounterLoad(encounter):
     health = encounter.health
+    startingGears = encounter.currentGears
     pygame.display.update()
-    return health
+    return health, startingGears
 
 
 def randomLootGenerator(amount):
@@ -301,7 +310,6 @@ def randomLootGenerator(amount):
             continue
 
 
-
 enemyHealth = 100
 enemyHealthBar = pygame.Rect((100, 100), (enemyHealth, 25))
 playerHeathBar = pygame.Rect((100, 100), (playerHealth, 20))
@@ -339,7 +347,7 @@ while start:  # Main loop for the game
                 elif mousex > (len(hand) * 80) + 55 or mousex < 55:
                     enemyHealth, currentGears = enemyHealth, currentGears
                 else:
-                    enemyHealth, currentGears = playCard(hand[getCard()], currentGears, enemyHealth, 1)
+                    enemyHealth, currentGears = playCard(hand[int(getCard())], currentGears, enemyHealth, 1)
                 displayUpdate()
                 cardPlace()
                 pygame.display.update()
@@ -384,7 +392,7 @@ while start:  # Main loop for the game
                 pygame.quit()
                 sys.exit()
         elif event.type == MOUSEBUTTONUP:
-            enemyHealth = encounterLoad(encounters[randint(0, 1)])
+            enemyHealth, encounter2.currentGears = encounterLoad(encounters[randint(0, 1)])
             hand = []
             discard = []
             drawn = False
